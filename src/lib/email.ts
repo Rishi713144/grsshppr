@@ -17,13 +17,17 @@ export async function sendEmail({
   react: React.ReactElement;
 }) {
   if (!resend) {
-    console.log(`[email] Would send to ${to}: ${subject}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[email] Would send to ${to}: ${subject}`);
+    }
     return;
   }
 
   const { error } = await resend.emails.send({ from: FROM, to, subject, react });
   if (error) {
     // ponytail: log and move on — email failure shouldn't break booking flow
-    console.error(`[email] Failed to send to ${to}:`, error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error(`[email] Failed to send to ${to}:`, error);
+    }
   }
 }
