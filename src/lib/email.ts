@@ -26,8 +26,6 @@ export async function sendEmail({
   const { error } = await resend.emails.send({ from: FROM, to, subject, react });
   if (error) {
     // ponytail: log and move on — email failure shouldn't break booking flow
-    if (process.env.NODE_ENV !== "production") {
-      console.error(`[email] Failed to send to ${to}:`, error);
-    }
+    console.error(`[email] Failed to send to ${to}:`, error);
   }
 }

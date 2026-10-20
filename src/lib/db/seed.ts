@@ -8,8 +8,6 @@ import { users, profiles } from "./schema";
 const client = postgres(process.env.DATABASE_URL!);
 const db = drizzle(client);
 
-const logsEnabled = process.env.NODE_ENV !== "production";
-
 const seedMentors = [
   {
     name: "Elena Vasquez",
@@ -70,9 +68,7 @@ async function seed() {
     process.exit(1);
   }
 
-  if (logsEnabled) {
-    console.log("Seeding database…");
-  }
+  console.log("Seeding database…");
 
   for (const mentor of seedMentors) {
     const userId = crypto.randomUUID();
@@ -96,22 +92,16 @@ async function seed() {
       available: true,
     });
 
-    if (logsEnabled) {
-      console.log(`  ✓ ${mentor.name}`);
-    }
+    console.log(`  ✓ ${mentor.name}`);
   }
 
-  if (logsEnabled) {
-    console.log(`\nSeeded ${seedMentors.length} mentors.`);
-  }
+  console.log(`\nSeeded ${seedMentors.length} mentors.`);
   await client.end();
   process.exit(0);
 }
 
 seed().catch(async (err) => {
-  if (logsEnabled) {
-    console.error("Seed failed:", err);
-  }
+  console.error("Seed failed:", err);
   await client.end();
   process.exit(1);
 });
